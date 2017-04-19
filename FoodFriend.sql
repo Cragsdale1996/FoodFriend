@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `RestAccount` (
 CREATE TABLE IF NOT EXISTS `Sessions` (
   `account_id` int(11) NOT NULL,
   `is_restaurant` tinyint(4) NOT NULL,
-  `session_id` int(11) NOT NULL,
+  `session_id` varchar(50) NOT NULL,
   `time_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `time_expires` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
