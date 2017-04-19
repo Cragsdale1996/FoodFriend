@@ -106,7 +106,7 @@ CREATE TABLE `Vote` (
 --
 -- Indexes for dumped tables
 --
-
+ALTER TABLE Sessions MODIFY session_id VARCHAR(50) NOT NULL;
 --
 -- Indexes for table `Dishes`
 --
@@ -134,7 +134,7 @@ ALTER TABLE `UserAccount`
 --
 -- AUTO_INCREMENT for dumped tables
 --
-
+ALTER TABLE `RestAccount` MODIFY `rest_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `UserAccount`
 --
