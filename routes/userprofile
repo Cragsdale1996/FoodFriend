@@ -1,0 +1,53 @@
+$app->post('/userprofile', function ($request, $response){
+        $input = $request->getParsedBody();
+        foreach($input as $key => $param){
+                if($key == "session_id"){
+                        $sid = $param;
+                }
+                if($key == "name"){
+                        $name = $param;
+                }
+                if($key == "email"){
+                        $email = $param;
+                }
+                if($key == "city"){
+                        $city = $param;
+                }
+                if($key == "state_post_code"){
+                        $state_post_code = $param;
+                }
+        }
+        $sth = $this->db->prepare("SELECT account_id, time_expires FROM Sessions WHERE session_id=:session_id");
+        $sth->bindParam("session_id", $sid);
+        $sth->execute();
+        $output = $sth->fetchAll();
+        if(empty($output)){
+                $data = json_decode($json, true);
+                $data[] = array('valid' => 'false', 'session_id' => '0');
+                $json = json_encode($data);
+                return $json;
+        }
+        $today = date('Y-m-d H:i:s');
+ 	if($output[0][time_expires] < $today){
+                $stm = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
+                $stm->bindParam("account_id", $output[0][account_id]);
+                $stm->execute();
+                $data = json_decode($json, true);
+                $data[] = array('valid' => 'false', 'session_id' => '0');
+                $json = json_encode($data);
+                return $json;
+        }
+        $sql = ("UPDATE UserAccount SET name=:name, email=:email, city=:city, state_post_code=:state_post_code WHERE user_id=:account_id");
+        $sth2 =  $this->db->prepare($sql);
+        $sth2->bindParam("name", $name);
+        $sth2->bindParam("email", $email);
+        $sth2->bindParam("city", $city);
+        $sth2->bindParam("state_post_code", $state_post_code);
+        $sth2->bindParam("account_id", $output[0][account_id]);
+        $sth2->execute();
+        $data = json_decode($json, true);
+        $data[] = array('valid' => 'true', 'session_id' => $sid);
+        $json = json_encode($data);
+        return $json;
+
+});
