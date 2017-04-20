@@ -6,17 +6,18 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Component } from '@angular/core';
 import { LoginComponent } from './login/login.component';
+import { HomeComponent } from './home/home.component';
 
 
 var routes = [
   {
-    path: '',
+    path: 'login',
     component: LoginComponent
+  },
+  {
+    path: '',
+    component: HomeComponent
   }
-//  {
-//    path: 'add',
-///    component: MovieEditorComponent
-//  },
 //  {
 //    path: 'edit/:id',
 //    component: MovieEditorComponent
@@ -30,7 +31,8 @@ var routes = [
     FormsModule
   ],
   declarations: [
-    LoginComponent
+    LoginComponent,
+    HomeComponent
   ],
   exports: [
     LoginComponent

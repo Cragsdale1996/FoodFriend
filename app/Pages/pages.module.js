@@ -11,15 +11,16 @@ const platform_browser_1 = require("@angular/platform-browser");
 const router_1 = require("@angular/router");
 const forms_1 = require("@angular/forms");
 const login_component_1 = require("./login/login.component");
+const home_component_1 = require("./home/home.component");
 var routes = [
     {
-        path: '',
+        path: 'login',
         component: login_component_1.LoginComponent
+    },
+    {
+        path: '',
+        component: home_component_1.HomeComponent
     }
-    //  {
-    //    path: 'add',
-    ///    component: MovieEditorComponent
-    //  },
     //  {
     //    path: 'edit/:id',
     //    component: MovieEditorComponent
@@ -35,7 +36,8 @@ PagesModule = __decorate([
             forms_1.FormsModule
         ],
         declarations: [
-            login_component_1.LoginComponent
+            login_component_1.LoginComponent,
+            home_component_1.HomeComponent
         ],
         exports: [
             login_component_1.LoginComponent
