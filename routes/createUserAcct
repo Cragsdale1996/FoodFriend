@@ -1,0 +1,59 @@
+<?php
+// Routes
+$app->post('/createUserAcct', function ($request, $response) {
+        $allPostVariables = $request->getBody();
+          $input = json_decode($allPostVariables, true);
+          foreach($input as $key => $param)
+          {
+            $name = $input['name'];
+            $email = $input['email'];
+            $city= $input['city'];
+            $state = $input['state'];
+            $password = $input['password'];
+          }
+
+         //after have the information need to see if user exists
+          $sql = "SELECT *  FROM UserAccount"; 
+          $sth = $this->db->prepare($sql);
+          $sth->execute();
+          $out = $sth->fetchAll();
+         foreach($out as $row){
+                $n = $row['name'];
+                 if($n === $name)
+                {
+                        $same = true;
+                }
+         }
+
+          //if account already exixts then invalid
+          if($same)
+          {
+            $data = json_decode($json, true);
+            $data[] = array('valid' => 'false', 'session_id' => 0 );
+            $json = json_encode($data);
+            return $json;
+          }
+          else
+          {
+
+            //insert user data into database
+              $sql = "INSERT INTO UserAccount(name,email,password,city,state_post_code) VALUES('$name','$email','$password','$city','$state')";  
+              $sth = $this->db->prepare($sql);
+              if($sth->execute())
+               {
+                 $sid = uniqid();
+                $stm = $this->db->prepare("SELECT user_id FROM UserAccount WHERE name=:name");
+                $stm->bindParam("name", $name);
+                $stm->execute();
+                $output= $stm->fetchAll();
+                $val = $output[0][user_id];                 
+                $data = json_decode($json, true);
+                 $data[] = array('valid' => 'true', 'session_id' => $sid);
+                 $json = json_encode($data);
+                 $sql = "INSERT INTO Sessions(account_id, is_restaurant, session_id, time_created, time_expires) VALUES ('$val', 0, '$sid', NOW(), NOW() + INTERVAL 1 HOUR)";
+                 $stm2 = $this->db->prepare($sql);
+                 $stm2->execute();              
+                 return $json;
+               }
+         }
+       });
