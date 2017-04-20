@@ -55,6 +55,8 @@ CREATE TABLE IF NOT EXISTS `Sessions` (
   `time_created` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `time_expires` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+ALTER TABLE  `Sessions` DROP PRIMARY KEY ,
+ADD PRIMARY KEY (  `session_id` ) ;
 
 -- --------------------------------------------------------
 
