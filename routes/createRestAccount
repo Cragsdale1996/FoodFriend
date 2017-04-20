@@ -1,0 +1,56 @@
+<?php
+$app->post('/createRestAccount', function($request, $response){
+        $input = $request->getParsedBody();
+        foreach($input as $key => $param){
+                if($key == "name"){
+                        $name = $param;
+                }
+                if($key == "email"){
+                        $email = $param;
+                }
+                if($key == "password"){
+                        $password = $param;
+                }
+                if($key == "address"){
+                        $address = $param;
+                }
+                if($key == "category"){
+                        $category = $param;
+                }
+                if(key == "city"){
+                        $city = $param;
+                }
+                if(key == "state_post_code"){
+                        $state_post_code = $param;
+                }
+        $sth = $this->db->prepare("SELECT * FROM RestAccount");
+        $sth->execute();
+        $output = $sth->fetchAll();
+        foreach ($output as $o){
+                if($o['name'] == $name){
+                        $data = json_decode($json, true);
+                        $data[] = array('valid' => 'false', 'session_id' => 0);
+                        $json = json_encode($data);
+                        return $json;
+                }
+        }
+        $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$password', '$address', 		'$category', '$city','$state_post_code')";
+        $stm = $this->db->prepare($sql);
+        $stm->execute();
+        if($stm->execute()){
+                $stm = $this->db->prepare("SELECT rest_id FROM RestAccount WHERE name=:name");
+                $stm->bindParam("name", $name);
+                $stm->execute();
+                $output= $stm->fetchAll();
+                $val = $output[0][rest_id];
+                $sid = uniqid();
+                $data = json_decode($json, true);
+                $data[] = array('valid' => 'true', 'session_id' => $sid);
+                $json = json_encode($data);
+                $sql = "INSERT INTO Sessions (account_id, is_restaurant, session_id, time_created, time_expires) VALUES ($val, 1, '$sid', now(), now() + interval 1 hour)";
+		$stm2 = $this->db->prepare($sql);
+                $stm2->execute();
+                return $json;
+        }
+
+});
