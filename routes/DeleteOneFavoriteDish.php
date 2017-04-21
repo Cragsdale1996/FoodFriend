@@ -5,10 +5,11 @@ $app->delete('/userprofile/del/[{dish_id}]', function($request, $response, $args
 
       $body = $request->getBody();
       $body = json_decode($body, true);
+      $id = $body['session_id'];
 
       //get session_id
       $info = $this->db->prepare("SELECT account_id, session_id, time_expires FROM Sessions WHERE session_id = :id");
-      $info->bindParam("id", $body['session_id']);
+      $info->bindParam("id", $id);
       $info->execute();
       $data = $info->fetchAll();
 
@@ -19,7 +20,7 @@ $app->delete('/userprofile/del/[{dish_id}]', function($request, $response, $args
           $today = date('Y-m-d H:i:s');
           if($data[0][time_expires] < $today){
                 $session_expire = $this->db->prepare("DELETE FROM Sessions WHERE session_id = :id");
-                $session_expire->bindParam("id", $body['session_id']);
+                $session_expire->bindParam("id", $id);
                 $session_expire->execute();
                 $mess[] = array('valid' => 'false', 'session_id' => 0);
                 return json_encode($mess);
