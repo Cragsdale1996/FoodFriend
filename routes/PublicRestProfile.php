@@ -114,8 +114,15 @@ function updateVote($db, $dish_id, $user_id, $id, $vote){
           //if your vote choice is different the vote data in the table, neutral the vote
           //and delete from the table
           if ($vote != $data->vote) {
+
+              //delete vote from Vote table
               $q = $db->prepare("DELETE FROM Vote WHERE user_id='$user_id' AND dish_id = '$dish_id'");
               $q->execute();
+
+              //update vote for the dish in Dishes table
+              $q2 = $db->prepare("UPDATE Dishes SET score = score + '$vote' WHERE dish_id = '$dish_id'");
+              $q2->execute();
+
               $mess[] = array('success' => 'true', 'session_id' => $id);
               return json_encode($mess);
 
@@ -129,6 +136,10 @@ function updateVote($db, $dish_id, $user_id, $id, $vote){
       } else {
           $new = $db->prepare("INSERT INTO Vote(user_id, dish_id, vote) VALUES('$user_id','$dish_id','$vote')");
           $new->execute();
+
+          $q2 = $db->prepare("UPDATE Dishes SET score = score + '$vote' WHERE dish_id = '$dish_id'");
+          $q2->execute();
+
           $mess[] = array('success' => 'true', 'session_id' => $id);
           return json_encode($mess);
       }
