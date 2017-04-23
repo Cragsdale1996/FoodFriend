@@ -43,7 +43,6 @@ $app->delete('/userprofile/del/[{dish_id}]', function($request, $response, $args
                } else {
                    $mess[] = array('success' => 'false', 'session_id' => $id);
                    return $this->response->withJson($mess);
-
                }
         }
 
