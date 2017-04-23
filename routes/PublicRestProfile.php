@@ -30,16 +30,10 @@ $app->post('/restProfile/public', function($request, $response, $args){
     $body = $request->getBody();
     $body = json_decode($body, true);
 
-    //get user_id, dish_id, session_id, and vote(1 for up and -1 for down)
-    // foreach($body as $key => $param){
-    //     if($key == "dish_id"){$dish_id = $param;}
-    //     if($key == "vote"){$vote = $param;}
-    //     if($key == "session_id"){$id = $param;}
-    // }
     $dish_id = $body['dish_id'];
     $vote = $body['vote'];
     $id = $body['session_id'];
-//return $dish_id . " " . $vote . " " . $id;
+
     //get session_id
     $info = $this->db->prepare("SELECT account_id, session_id, time_expires FROM Sessions WHERE session_id='$id'");
     $info->execute();
@@ -70,55 +64,11 @@ $app->post('/restProfile/public', function($request, $response, $args){
 
             ///////////if vote is empty -> adding dish
             if (empty($vote)) {
-              $query = $this->db->prepare("SELECT * FROM Favorites WHERE dish_id='$dish_id'
-                          AND user_id='$user_id'");
-              $query->execute();
-              $data = $query->fetchObject();
-
-              //if dish is already in favorite list for this user
-              if(!empty($data)){
-                  $mess[] = array('success' => 'false', 'session_id' => $id);
-                  return $this->response->withJson($mess);
-
-                  //dish not exist , CREATE new favorite
-              } else {
-                  $new = $this->db->prepare("INSERT INTO Favorites(user_id, dish_id) VALUES('$user_id','$dish_id')");
-                  $new->execute();
-                  $mess[] = array('success' => 'true', 'session_id' => $id);
-                  return $this->response->withJson($mess);
-              }
+                return addDish($this->db, $dish_id, $user_id, $id);
 
             ///////////if vote is not empty -> changing vote
             } else {
-                $query = $this->db->prepare("SELECT * FROM Vote WHERE dish_id='$dish_id'
-                            AND user_id='$user_id'");
-                $query->execute();
-                $data = $query->fetchObject();
-
-                //vote associated with this user already exist
-                if (!empty($data)) {
-
-                    //if your vote choice is different the vote data in the table, neutral the vote
-                    //and delete from the table
-                    if ($vote != $data->vote) {
-                        $q = $this->db->prepare("DELETE FROM Vote WHERE user_id='$user_id' AND dish_id = '$dish_id'");
-                        $q->execute();
-                        $mess[] = array('success' => 'true', 'session_id' => $id);
-                        return $this->response->withJson($mess);
-
-                    //if your vote is the same
-                    } else {
-                        $mess[] = array('success' => 'false', 'session_id' => $id);
-                        return $this->response->withJson($mess);
-                    }
-
-                //vote not exist for this user , CREATE new vote data
-                } else {
-                    $new = $this->db->prepare("INSERT INTO Vote(user_id, dish_id, vote) VALUES('$user_id','$dish_id','$vote')");
-                    $new->execute();
-                    $mess[] = array('success' => 'true', 'session_id' => $id);
-                    return $this->response->withJson($mess);
-                }
+                return updateVote($this->db, $dish_id, $user_id, $id, $vote);
             }
         }
 
@@ -129,3 +79,57 @@ $app->post('/restProfile/public', function($request, $response, $args){
     }
 
 });
+
+function addDish($db, $dish_id, $user_id, $id){
+      if (empty($vote)) {
+        $query = $db->prepare("SELECT * FROM Favorites WHERE dish_id='$dish_id'
+                    AND user_id='$user_id'");
+        $query->execute();
+        $data = $query->fetchObject();
+
+        //if dish is already in favorite list for this user
+        if(!empty($data)){
+            $mess[] = array('success' => 'false', 'session_id' => $id);
+            return json_encode($mess);
+
+            //dish not exist , CREATE new favorite
+        } else {
+            $new = $db->prepare("INSERT INTO Favorites(user_id, dish_id) VALUES('$user_id','$dish_id')");
+            $new->execute();
+            $mess[] = array('success' => 'true', 'session_id' => $id);
+            return json_encode($mess);
+        }
+    }
+}
+
+function updateVote($db, $dish_id, $user_id, $id, $vote){
+      $query = $db->prepare("SELECT * FROM Vote WHERE dish_id='$dish_id'
+                  AND user_id='$user_id'");
+      $query->execute();
+      $data = $query->fetchObject();
+
+      //vote associated with this user already exist
+      if (!empty($data)) {
+
+          //if your vote choice is different the vote data in the table, neutral the vote
+          //and delete from the table
+          if ($vote != $data->vote) {
+              $q = $db->prepare("DELETE FROM Vote WHERE user_id='$user_id' AND dish_id = '$dish_id'");
+              $q->execute();
+              $mess[] = array('success' => 'true', 'session_id' => $id);
+              return json_encode($mess);
+
+          //if your vote is the same
+          } else {
+              $mess[] = array('success' => 'false', 'session_id' => $id);
+              return json_encode($mess);
+          }
+
+      //vote not exist for this user , CREATE new vote data
+      } else {
+          $new = $db->prepare("INSERT INTO Vote(user_id, dish_id, vote) VALUES('$user_id','$dish_id','$vote')");
+          $new->execute();
+          $mess[] = array('success' => 'true', 'session_id' => $id);
+          return json_encode($mess);
+      }
+}
