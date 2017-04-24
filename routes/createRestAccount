@@ -27,7 +27,7 @@ $app->post('/createRestAccount', function($request, $response){
         $sth->execute();
         $output = $sth->fetchAll();
         foreach ($output as $o){
-                if($o['name'] == $name){
+                if($o['name'] == $name OR $o['email'] == $email){
                         $data = json_decode($json, true);
                         $data[] = array('valid' => 'false', 'session_id' => 0);
                         $json = json_encode($data);
