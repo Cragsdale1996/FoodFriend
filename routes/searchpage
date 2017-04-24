@@ -58,9 +58,19 @@ $app->get('/searchpage/[{search}]', function($request, $response, $args) {
         }
         $data = json_decode($json, true);
         foreach($output as $o){
-                $data[] = array('rest_id' => $o[rest_id]);
+                $stm = $this->db->prepare("SELECT score FROM Dishes WHERE rest_id=:rest_id");
+                $stm->bindParam("rest_id", $o[rest_id]);
+                $stm->execute();
+                $output2 = $stm->fetchAll();
+                $totalScore = 0;
+                foreach($output2 as $o2){
+                        $totalScore = $totalScore + $o2[score];
+                }
+                $data[] = array('rest_id' => $o[rest_id],'name' => $o[name], 'score' => $totalScore);
         }
         $json = json_encode($data);
         return $json;
+
+
 
 });
