@@ -18,8 +18,8 @@ $app->post('/createUserAcct', function ($request, $response) {
           $sth->execute();
           $out = $sth->fetchAll();
          foreach($out as $row){
-                $n = $row['name'];
-                 if($n === $name)
+                $e = $row['email'];
+                 if($e === $email)
                 {
                         $same = true;
                 }
