@@ -26,8 +26,15 @@ $app->post('/searchpage', function($request, $response){
                 $json = json_encode($data);
                 return $json;
         }
+        $sth2 = $this->db->prepare("SELECT DISTINCT(category) FROM RestAccount");
+        $sth2->execute();
+        $output2 = $sth2->fetchAll();
         $data = json_decode($json, true);
         $data[] = array('valid' => 'true', 'session_id' => $sid);
+        foreach($output2 as $o){
+                $cat = $o[category];
+                $data[] = array('category' => $cat);
+        }
         $json = json_encode($data);
         return $json;
 });
