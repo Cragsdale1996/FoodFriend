@@ -12,7 +12,8 @@ $app->get('/restprofile/[{rest_id}]', function($request, $response, $args){
     $data = $info->fetchAll();
 
     //get favorite Dishes
-    $sth = $this->db->prepare("SELECT name, description, score FROM Dishes WHERE rest_id = 1");
+    $sth = $this->db->prepare("SELECT name, description, score FROM Dishes WHERE rest_id =:rest_id");
+    $sth->bindParam("rest_id", $args['rest_id']);
     $sth->execute();
     $list = $sth->fetchAll();
     $dish = array('Dishes' => $list);
