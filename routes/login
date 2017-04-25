@@ -18,25 +18,48 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                         $json = json_encode($data);
                         return $json;
                 }else{
+                        $check = $this->db->prepare("SELECT session_id FROM Sessions WHERE account_id =: account_id");
+                        $check->bindParam("account_id", $output2[0][rest_id]);
+                        $check->execute();
+                        $output3 = $check->fetchAll();
+                        if(empty($output3)){
+                                $sid = uniqid();
+                                $val = $output2[0][rest_id];
+                                $data = json_decode($json, true);
+                                $data[] = array('valid' => 'true', 'session_id' => $sid);
+                                $json = json_encode($data);
+                                $sql = "INSERT INTO Sessions (account_id, is_restaurant,session_id,time_created,time_expires) VALUES ($val, 1, '$sid', now(), now() + interval 1 hour)";
+                                $stm = $this->db->prepare($sql);
+                                $stm->execute();
+                                return $json;
+                        }else{
+                                $data = json_decode($json, true);
+                                $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
+                                $json = json_encode($data);
+                                return $json;
+                        }
+                }
+        }else{
+                $check = $this->db->prepare("SELECT session_id FROM Sessions WHERE account_id=:account_id");
+                $check->bindParam("account_id", $output[0][user_id]);
+                $check->execute();
+                $output3 = $check->fetchAll();
+                if(empty($output3)){
                         $sid = uniqid();
-                        $val = $output2[0][rest_id];
+                        $val = $output[0][user_id];
                         $data = json_decode($json, true);
                         $data[] = array('valid' => 'true', 'session_id' => $sid);
                         $json = json_encode($data);
-                        $sql = "INSERT INTO Sessions (account_id, is_restaurant,session_id,time_created,time_expires) VALUES ($val, 1, '$sid', now(), now() + interval 1 hour)";
+                        $sql = "INSERT INTO Sessions (account_id, is_restaurant, session_id, time_created, time_expires) VALUES ($val, 0, '$sid', now(), now() + interval 1 hour)";
                         $stm = $this->db->prepare($sql);
                         $stm->execute();
                         return $json;
+                }else{
+                        $data = json_decode($json, true);
+                        $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
+                        $json = json_encode($data);
+                        return $json;
                 }
-        }else{
-                $sid = uniqid();
-                $val = $output[0][user_id];
-                $data = json_decode($json, true);
-                $data[] = array('valid' => 'true', 'session_id' => $sid);
-                $json = json_encode($data);
-                $sql = "INSERT INTO Sessions (account_id, is_restaurant, session_id, time_created, time_expires) VALUES ($val, 0, '$sid', now(), now() + interval 1 hour)";
-                $stm = $this->db->prepare($sql);
-                $stm->execute();
-                return $json;
         }
 });
+
