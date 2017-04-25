@@ -23,6 +23,7 @@ $app->post('/createRestAccount', function($request, $response){
                 if($key == "state_post_code"){
                         $state_post_code = $param;
                 }
+	}
         $sth = $this->db->prepare("SELECT * FROM RestAccount");
         $sth->execute();
         $output = $sth->fetchAll();
@@ -37,7 +38,6 @@ $app->post('/createRestAccount', function($request, $response){
 	$name = str_replace("'", "", $name);
         $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$password', '$address', 		'$category', '$city','$state_post_code')";
         $stm = $this->db->prepare($sql);
-        $stm->execute();
         if($stm->execute()){
                 $stm = $this->db->prepare("SELECT rest_id FROM RestAccount WHERE name=:name");
                 $stm->bindParam("name", $name);
