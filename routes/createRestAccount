@@ -17,10 +17,10 @@ $app->post('/createRestAccount', function($request, $response){
                 if($key == "category"){
                         $category = $param;
                 }
-                if(key == "city"){
+                if($key == "city"){
                         $city = $param;
                 }
-                if(key == "state_post_code"){
+                if($key == "state_post_code"){
                         $state_post_code = $param;
                 }
         $sth = $this->db->prepare("SELECT * FROM RestAccount");
