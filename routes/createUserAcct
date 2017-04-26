@@ -35,9 +35,9 @@ $app->post('/createUserAcct', function ($request, $response) {
           }
           else
           {
-
-            //insert user data into database
-              $sql = "INSERT INTO UserAccount(name,email,password,city,state_post_code) VALUES('$name','$email','$password','$city','$state')";  
+             $passwords =  password_hash($password, PASSWORD_DEFAULT);
+             //insert user data into database
+              $sql = "INSERT INTO UserAccount(name,email,password,city,state_post_code) VALUES('$name','$email','$passwords','$city','$state')";
               $sth = $this->db->prepare($sql);
               if($sth->execute())
                {
