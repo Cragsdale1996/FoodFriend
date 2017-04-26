@@ -15,7 +15,7 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                         $json = json_encode($data);
                         return $json;
                 }else{
-                        $check = $this->db->prepare("SELECT session_id FROM Sessions WHERE account_id=:account_id");
+                        $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id");
                         $check->bindParam("account_id", $output2[0][rest_id]);
                         $check->execute();
                         $output3 = $check->fetchAll();
@@ -58,7 +58,7 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                         }
                 }
         }else{
-                $check = $this->db->prepare("SELECT session_id FROM Sessions WHERE account_id=:account_id");
+                $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id");
                 $check->bindParam("account_id", $output[0][user_id]);
                 $check->execute();
                 $output3 = $check->fetchAll();
