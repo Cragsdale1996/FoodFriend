@@ -38,10 +38,23 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
 
                                 }
                         }else{
-                                $data = json_decode($json, true);
-                                $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
-                                $json = json_encode($data);
-                                return $json;
+                               date_default_timezone_set('US/Central');
+                               $today = date("Y-m-d H:i:s");
+                               if($output3[0][time_expires] > $today){
+                                        $data = json_decode($json, true);
+                                        $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
+                                        $json = json_encode($data);
+                                        return $json;
+                                }else{
+                                        $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
+                                        $stm2->bindParam("account_id", $output3[0][account_id]);
+                                        $stm2->execute();
+                                        $data = json_decode($json, true);
+                                        $data[] = array('valid' => 'false', 'session_id' => '0');
+                                        $json = json_encode($data);
+                                        return $json;
+                                }
+
                         }
                 }
         }else{
@@ -67,10 +80,23 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                                  return $json;
                         }
                 }else{
-                        $data = json_decode($json, true);
-                        $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
-                        $json = json_encode($data);
-                        return $json;
+                       date_default_timezone_set('US/Central');
+                        $today = date("Y-m-d H:i:s");
+                        if($output3[0][time_expires] > $today){
+                                $data = json_decode($json, true);
+                                $data[] = array('valid' => 'true', 'session_id' => $output3[0][session_id]);
+                                $json = json_encode($data);
+                                return $json;
+                        }else{
+                                $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
+                                $stm2->bindParam("account_id", $output3[0][account_id]);
+                                $stm2->execute();
+                                $data = json_decode($json, true);
+                                $data[] = array('valid' => 'false', 'session_id' => '0');
+                                $json = json_encode($data);
+                                return $json;
+                        }
+
                 }
         }
 });
