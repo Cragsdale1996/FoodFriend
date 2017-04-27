@@ -10,8 +10,15 @@ $app->post('/searchpage', function($request, $response){
         $sth->execute();
         $output = $sth->fetchAll();
         if(empty($output)){
+                $sth2 = $this->db->prepare("SELECT DISTINCT(category) FROM RestAccount");
+                $sth2->execute();
+                $output2 = $sth2->fetchAll();
                 $data = json_decode($json, true);
                 $data[] = array('valid' => 'false', 'session_id' => '0');
+                foreach($output2 as $o){
+                        $cat = $o[category];
+                        $data[] = array('category' => $cat);
+                }
                 $json = json_encode($data);
                 return $json;
         }
@@ -21,8 +28,15 @@ $app->post('/searchpage', function($request, $response){
                 $stm = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
                 $stm->bindParam("account_id", $output[0][account_id]);
                 $stm->execute();
+                $sth2 = $this->db->prepare("SELECT DISTINCT(category) FROM RestAccount");
+                $sth2->execute();
+                $output2 = $sth2->fetchAll();
                 $data = json_decode($json, true);
                 $data[] = array('valid' => 'false', 'session_id' => '0');
+                foreach($output2 as $o){
+                        $cat = $o[category];
+                        $data[] = array('category' => $cat);
+                }
                 $json = json_encode($data);
                 return $json;
         }

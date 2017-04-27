@@ -21,7 +21,7 @@ $app->get('/restaurant/[{session_id}]', function($request, $response, $args)
         if(checkSession($this, $args['session_id']) === 'r')
         {
                 // Query RestAccounts based on the current restaurant
-                $restQuery = $this->db->prepare("SELECT name, city, state_post_code, category, rest_id" . 
+                $restQuery = $this->db->prepare("SELECT name, city, state_post_code, category, rest_id" .
                                                 " FROM RestAccount, Sessions WHERE RestAccount.rest_id = Sessions.account_id AND session_id=:sid");
                 $restQuery->bindParam("sid", $args['session_id']);
                 $restQuery->execute();
@@ -46,7 +46,7 @@ $app->get('/restaurant/[{session_id}]', function($request, $response, $args)
                                       "\"score\" : \"" . $dishes[$i]['score'] . "\"},";
                         $i++;
                 }
- 
+                
                 $dishArrayJson .= "{\"dish_id\" : \"" . $dishes[$i]['dish_id'] . "\",".
                                    "\"name\" : \"" . $dishes[$i]['name'] . "\",".
                                    "\"description\" : \"" . $dishes[$i]['description'] . "\",".
@@ -124,7 +124,7 @@ $app->delete('/restaurant/deleteDishes', function($request, $response)
                         $removeDishQuery->bindParam("rid", $restInfo->rest_id);
                         $removeDishQuery->execute();
                 }
-
+                
                 $this->response = $this->response->withStatus(200);
                 return $this->response;
         }
