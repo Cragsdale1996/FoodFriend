@@ -7,6 +7,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Component } from '@angular/core';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 var routes = [
@@ -17,6 +18,10 @@ var routes = [
   {
     path: '',
     component: HomeComponent
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent
   }
 //  {
 //    path: 'edit/:id',
@@ -32,10 +37,12 @@ var routes = [
   ],
   declarations: [
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    ProfileComponent,
   ],
   exports: [
-    LoginComponent
+    LoginComponent,
+    ProfileComponent
   ],
   providers: [
 

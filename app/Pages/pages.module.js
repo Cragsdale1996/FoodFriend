@@ -12,6 +12,7 @@ const router_1 = require("@angular/router");
 const forms_1 = require("@angular/forms");
 const login_component_1 = require("./login/login.component");
 const home_component_1 = require("./home/home.component");
+const profile_component_1 = require("./profile/profile.component");
 var routes = [
     {
         path: 'login',
@@ -20,6 +21,10 @@ var routes = [
     {
         path: '',
         component: home_component_1.HomeComponent
+    },
+    {
+        path: 'profile',
+        component: profile_component_1.ProfileComponent
     }
     //  {
     //    path: 'edit/:id',
@@ -37,10 +42,12 @@ PagesModule = __decorate([
         ],
         declarations: [
             login_component_1.LoginComponent,
-            home_component_1.HomeComponent
+            home_component_1.HomeComponent,
+            profile_component_1.ProfileComponent,
         ],
         exports: [
-            login_component_1.LoginComponent
+            login_component_1.LoginComponent,
+            profile_component_1.ProfileComponent
         ],
         providers: []
     })

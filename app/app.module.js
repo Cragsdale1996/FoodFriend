@@ -11,6 +11,7 @@ const platform_browser_1 = require("@angular/platform-browser");
 const router_1 = require("@angular/router");
 const app_component_1 = require("./app.component");
 const pages_module_1 = require("./pages/pages.module");
+const http_1 = require("@angular/http");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
@@ -18,7 +19,9 @@ AppModule = __decorate([
         imports: [
             platform_browser_1.BrowserModule,
             router_1.RouterModule,
-            pages_module_1.PagesModule
+            pages_module_1.PagesModule,
+            http_1.HttpModule,
+            http_1.JsonpModule
         ],
         declarations: [
             app_component_1.AppComponent,
