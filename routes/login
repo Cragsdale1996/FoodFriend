@@ -1,12 +1,21 @@
 <?php
-$app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
+$app->post('/login', function ($request, $response) {
+        $input = $request->getParsedBody();
+        foreach($input as $key => $param){
+                if($key == "email"){
+                        $email = $param;
+                }
+                if($key == "password"){
+                        $password = $param;
+                }
+        }
         $sth = $this->db->prepare("SELECT user_id, password FROM UserAccount WHERE email=:email");
-        $sth->bindParam("email", $args['email']);
+        $sth->bindParam("email", $email);
         $sth->execute();
         $output = $sth->fetchAll();
         if(empty($output)){
                 $sth2 = $this->db->prepare("SELECT rest_id, password FROM RestAccount WHERE email=:email");
-                $sth2->bindParam("email", $args['email']);
+                $sth2->bindParam("email", $email);
                 $sth2->execute();
                 $output2 = $sth2->fetchAll();
                 if(empty($output2)){
@@ -20,7 +29,7 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                         $check->execute();
                         $output3 = $check->fetchAll();
                         if(empty($output3)){
-                                if(password_verify($args['password'], $output2[0][password])){
+                                if(password_verify($password, $output2[0][password])){
                                         $sid = uniqid();
                                         $val = $output2[0][rest_id];
                                         $data = json_decode($json, true);
@@ -63,7 +72,7 @@ $app->get('/login/[{email}&{password}]', function ($request, $response, $args) {
                 $check->execute();
                 $output3 = $check->fetchAll();
                 if(empty($output3)){
-                        if(password_verify($args['password'], $output[0][password])){
+                        if(password_verify($password, $output[0][password])){
                                 $sid = uniqid();
                                 $val = $output[0][user_id];
                                 $data = json_decode($json, true);
