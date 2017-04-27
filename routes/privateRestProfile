@@ -1,0 +1,134 @@
+function checkSession($app, $sessionID)
+{
+        // Delete expired sessions from Sessions table
+        $DeleteExpiredQuery = $app->db->prepare("DELETE FROM Sessions WHERE NOW() >= time_expires");
+        $DeleteExpiredQuery->execute();
+
+        // Query sessions table for session ID passed in
+        $sessionsQuery = $app->db->prepare("SELECT * FROM Sessions WHERE session_id=:sid");
+        $sessionsQuery->bindParam("sid", $sessionID);
+        $sessionsQuery->execute();
+
+        $sessionInfo = $sessionsQuery->fetch();
+        if(empty($sessionInfo)) return 'n'; // if no current session has this session ID, return false
+
+        if($sessionInfo['is_restaurant'] == "1") return 'r'; // if session is rest account, return 'r' char
+        else return 'u'; // if session is user account, return 'u' char
+}
+
+$app->get('/restaurant/[{session_id}]', function($request, $response, $args)
+{
+        if(checkSession($this, $args['session_id']) === 'r')
+        {
+                // Query RestAccounts based on the current restaurant
+                $restQuery = $this->db->prepare("SELECT name, city, state_post_code, category, rest_id" .
+                                                " FROM RestAccount, Sessions WHERE RestAccount.rest_id = Sessions.account_id AND session_id=:sid");
+                $restQuery->bindParam("sid", $args['session_id']);
+                $restQuery->execute();
+                $restInfo = $restQuery->fetchObject();  
+
+                // Query Dishes for number of dishes and dish info
+                $dishesQuery = $this->db->prepare("SELECT COUNT(rest_id) AS dishesNum FROM Dishes GROUP BY rest_id HAVING rest_id=" . $restInfo->rest_id);
+                $dishesQuery->execute();
+                $dishesNum = $dishesQuery->fetchObject()->dishesNum;
+
+                $dishesQuery = $this->db->prepare("SELECT dish_id, name, description, score FROM Dishes WHERE rest_id=" . $restInfo->rest_id);
+                $dishesQuery->execute();
+                $dishes = $dishesQuery->fetchAll();
+
+                $i = 0;
+                $dishArrayJson = "[";
+                while($i < $dishesNum - 1)
+                {
+                        $dishArrayJson .= "{\"dish_id\" : \"" . $dishes[$i]['dish_id'] . "\",".
+                                      "\"name\" : \"" . $dishes[$i]['name'] . "\",".
+                                      "\"description\" : \"" . $dishes[$i]['description'] . "\",".
+                                      "\"score\" : \"" . $dishes[$i]['score'] . "\"},";
+                        $i++;
+                }
+                
+                $dishArrayJson .= "{\"dish_id\" : \"" . $dishes[$i]['dish_id'] . "\",".
+                                   "\"name\" : \"" . $dishes[$i]['name'] . "\",".
+                                   "\"description\" : \"" . $dishes[$i]['description'] . "\",".
+                                   "\"score\" : \"" . $dishes[$i]['score'] . "\"}";
+                $dishArrayJson .= "]";
+
+                // Craft response
+                $jsonResponse = "{".
+                                "\"rest_name\" : \"" . $restInfo->name . "\"," .
+                                "\"city\" : \"" . $restInfo->city . "\"," .
+                                "\"state\" : \"" . $restInfo->state_post_code . "\"," .
+                                "\"category\" : \"" . $restInfo->category . "\"," .
+                                "\"numberOfDishes\" : " . $dishesNum . "\"," .
+                                "\"dishes\" : " . $dishArrayJson .
+                                "}";
+
+                // Set response body
+                $this->response->getBody()->write($jsonResponse);
+                return $this->response;
+        }
+
+        $this->response = $this->response->withStatus(401);
+        return $this->response;
+});
+
+$app->post('/restaurant/addDishes', function($request, $response)
+{
+        // Query sessions table against recieved session ID, store in $currentSession as row object
+        $rawData = $this->request->getBody();
+        $sessionData = json_decode($rawData, TRUE);
+
+        if(checkSession($this, $sessionData['session_id']) === 'r')
+        {
+                // Query RestAccounts based on the current restaurant
+                $restQuery = $this->db->prepare("SELECT rest_id FROM RestAccount, Sessions WHERE RestAccount.rest_id = Sessions.account_id AND session_id=:sid");
+                $restQuery->bindParam("sid", $sessionData['session_id']);
+                $restQuery->execute();
+                $restInfo = $restQuery->fetchObject();  
+
+                foreach($sessionData['dishes'] as $thisDish)
+                {
+                        $addDishQuery = $this->db->prepare("INSERT INTO Dishes (rest_id, name, description) VALUES (:rid, :name, :description)");
+                        $addDishQuery->bindParam("rid", $restInfo->rest_id);
+                        $addDishQuery->bindParam("name", $thisDish['name']);
+                        $addDishQuery->bindParam("description", $thisDish['description']);      
+                        $addDishQuery->execute();
+                }
+
+                $this->response = $this->response->withStatus(201);
+                return $this->response;
+        }
+        
+        $this->response = $this->response->withStatus(403);
+        return $this->response;
+});
+
+$app->delete('/restaurant/deleteDishes', function($request, $response)
+{
+        // Query sessions table against recieved session ID, store in $currentSession as row object
+        $rawData = $this->request->getBody();
+        $sessionData = json_decode($rawData, True);
+
+        if(checkSession($this, $sessionData['session_id']) === 'r')
+        {
+                // Query RestAccounts based on the current restaurant
+                $restQuery = $this->db->prepare("SELECT rest_id FROM RestAccount, Sessions WHERE RestAccount.rest_id = Sessions.account_id AND session_id=:sid");
+                $restQuery->bindParam("sid", $sessionData['session_id']);
+                $restQuery->execute();
+                $restInfo = $restQuery->fetchObject();  
+
+                foreach($sessionData['dishes'] as $thisDish)
+                {
+                        $removeDishQuery = $this->db->prepare("DELETE FROM Dishes WHERE dish_id=:did AND rest_id=:rid");
+                        $removeDishQuery->bindParam("did", $thisDish['id']);
+                        $removeDishQuery->bindParam("rid", $restInfo->rest_id);
+                        $removeDishQuery->execute();
+                }
+                
+                $this->response = $this->response->withStatus(200);
+                return $this->response;
+        }
+
+        $this->response = $this->response->withStatus(403);
+        return $this->response;
+});
