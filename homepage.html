@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Homepage</title>
+</head>
+<body>
+    <h1>FoodFriend Homepage</h1>
+
+    <button id="myButton" type="button">Click to go to Search page</button>
+    <br></br>
+    <b><font size="5"> Top 5 Dishes</font></b>
+    <p id="demo"></p>
+
+        <!--script for displaying dishes -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script>
+            $.ajax({
+                url: "http://192.168.33.10/Slim/FoodFriend/index.php/home",
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                  var h = "";
+                  for (i = 0; i < data.length; i++){
+                      h += "+ Dish name: " + data[i].Dish_name + "<br>";
+                      h += "Description:" + data[i].description + "<br>";
+                      h += "Score:" + data[i].score + "<br>";
+                      h += "Restaurant name:" + data[i].Restaurant_name + "<br><br>";
+                  }
+                    document.getElementById("demo").innerHTML = h;
+                }
+            });
+        </script>
+
+        <script type="text/javascript">
+            document.getElementById("myButton").onclick = function () {
+                //put location to search page here
+                location.href = "";
+            };
+        </script>
+
+</body>
+</html>
