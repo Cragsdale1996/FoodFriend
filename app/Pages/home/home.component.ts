@@ -11,5 +11,10 @@ import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 
 export class HomeComponent {
 
+constructor(private router : Router){};
 
+goTo(){
+	this.router.navigate(['/login']);
+	console.log("not working?");
+}
 }
