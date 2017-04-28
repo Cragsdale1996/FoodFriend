@@ -10,7 +10,13 @@ function prepareInfo(){
         var c = document.getElementById('city').value;
         var s = document.getElementById('state').value;
         var p = document.getElementById('password').value;
-        sendJson(n,e,c,s,p);
+        if((n.length == 0)|| (e.length == 0) || (c.length == 0) || (s.length == 0) || (p.len$
+        {
+                alert('Fields must not be left blank!');
+        }
+        else{
+                sendJson(n,e,c,s,p);
+        }
 }
 
 function sendJson(n,c,e,s,p){
@@ -26,7 +32,6 @@ function sendJson(n,c,e,s,p){
                 contentType: 'application/json',
                 success: function(data){
                         alert(JSON.stringify(data));
-                        console.log(data);
                 },
                 complete: function(reponse, textStatus){
                        alert(textStatus);},
