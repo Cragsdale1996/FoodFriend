@@ -10,5 +10,5 @@ $app->get('/home', function ($request, $response, $args) {
 
       $sth->execute();
       $list = $sth->fetchAll();
-      return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');withJson($list);
+      return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*')->withJson($list);
 });
