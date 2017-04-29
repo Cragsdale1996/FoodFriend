@@ -12,50 +12,52 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@angular/core");
 const router_1 = require("@angular/router");
 const profile_service_1 = require("../profile/profile.service");
+const restaurant_model_1 = require("../models/restaurant_model");
 const dish_model_1 = require("../models/dish_model");
-let HomeComponent = class HomeComponent {
+let RestaurantComponent = class RestaurantComponent {
     constructor(router, profileService) {
         this.router = router;
         this.profileService = profileService;
+        this.restaurant = new restaurant_model_1.RestaurantModel();
         this.dishes = [];
     }
-    ;
     ngOnInit() {
-        var user = JSON.parse(localStorage.getItem('currentUser'));
-        this.profileService.setUser(user);
-        if (user) {
-            this.user = this.profileService.getUser();
-        }
-        this.getDishes();
+        this.getRestaurantProfile();
     }
-    getDishes() {
-        this.profileService.getTop5Dishes().subscribe(data => {
-            for (var i = 0; i < data.length; i++) {
+    logout() {
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/']);
+    }
+    getRestaurantProfile() {
+        this.profileService.getRestaurantProfile().subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            this.restaurant = data[0];
+            localStorage.setItem('currentUser', JSON.stringify(data[0]));
+            this.profileService.setRestaurant(this.restaurant);
+            for (var i = 0; i < data['Dishes'].length; i++) {
                 var dish = new dish_model_1.Dish();
-                dish = data[i];
+                dish = data['Dishes'][i];
                 this.dishes.push(dish);
             }
+            console.log(this.restaurant);
             console.log(this.dishes);
         }, 
         // the second argument is a function which runs on error
         err => console.error(err), 
         // the third argument is a function which runs on completion
-        () => console.log('done loading dishes'));
-    }
-    goTo() {
-        this.router.navigate(['/login']);
-        console.log("not working?");
+        () => console.log('done loading profile'));
     }
 };
-HomeComponent = __decorate([
+RestaurantComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'home',
-        templateUrl: 'home.component.html',
-        styleUrls: ['home.component.css'],
+        selector: 'restaurant',
+        templateUrl: 'restaurant.component.html',
+        styleUrls: ['restaurant.component.css'],
         providers: [profile_service_1.ProfileService]
     }),
     __metadata("design:paramtypes", [router_1.Router, profile_service_1.ProfileService])
-], HomeComponent);
-exports.HomeComponent = HomeComponent;
-//# sourceMappingURL=home.component.js.map
+], RestaurantComponent);
+exports.RestaurantComponent = RestaurantComponent;
+//# sourceMappingURL=restaurant.component.js.map

@@ -12,15 +12,38 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@angular/core");
 const http_1 = require("@angular/http");
 const Rx_1 = require("rxjs/Rx");
+const user_model_1 = require("../models/user_model");
 let ProfileService = class ProfileService {
     constructor(http) {
         this.http = http;
         // Change these URL's from Apiary to whatever endpoints you have
-        this.getProfileUrl = "https://private-0c3f4-apiary13.apiary-mock.com/userprofile/12kljaskdjfe";
+        this.getProfileUrl = "https://private-0c3f4-apiary13.apiary-mock.com/userprofile/";
+        this.user = new user_model_1.UserModel();
+    }
+    setUser(user) {
+        this.user = user;
+    }
+    setRestaurant(user) {
+        this.restaurant = user;
+    }
+    getRestaurant() {
+        return this.restaurant;
+    }
+    getUser() {
+        return this.user;
     }
     // Uses http.get() to load a single JSON file
     getProfile() {
+        this.getProfileUrl = this.getProfileUrl + "123";
         return this.http.get(this.getProfileUrl).map((res) => res.json());
+    }
+    getRestaurantProfile() {
+        var url = "https://private-0c3f4-apiary13.apiary-mock.com/restaurant/" + "123";
+        return this.http.get(url).map((res) => res.json());
+    }
+    getTop5Dishes() {
+        var url = "https://private-0c3f4-apiary13.apiary-mock.com/home";
+        return this.http.get(url).map((res) => res.json());
     }
     // Uses Observable.forkJoin() to run multiple concurrent http.get() requests.
     // The entire operation will result in an error state if any single request fails.

@@ -13,6 +13,8 @@ const forms_1 = require("@angular/forms");
 const login_component_1 = require("./login/login.component");
 const home_component_1 = require("./home/home.component");
 const profile_component_1 = require("./profile/profile.component");
+const search_component_1 = require("./search/search.component");
+const restaurant_component_1 = require("./restaurant_profile/restaurant.component");
 var routes = [
     {
         path: 'login',
@@ -25,6 +27,14 @@ var routes = [
     {
         path: 'profile',
         component: profile_component_1.ProfileComponent
+    },
+    {
+        path: 'search',
+        component: search_component_1.SearchComponent
+    },
+    {
+        path: 'restaurant',
+        component: restaurant_component_1.RestaurantComponent
     }
     //  {
     //    path: 'edit/:id',
@@ -44,10 +54,15 @@ PagesModule = __decorate([
             login_component_1.LoginComponent,
             home_component_1.HomeComponent,
             profile_component_1.ProfileComponent,
+            search_component_1.SearchComponent,
+            restaurant_component_1.RestaurantComponent
         ],
         exports: [
             login_component_1.LoginComponent,
-            profile_component_1.ProfileComponent
+            home_component_1.HomeComponent,
+            profile_component_1.ProfileComponent,
+            search_component_1.SearchComponent,
+            restaurant_component_1.RestaurantComponent
         ],
         providers: []
     })

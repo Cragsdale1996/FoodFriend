@@ -8,6 +8,8 @@ import { Component } from '@angular/core';
 import { LoginComponent } from './login/login.component';
 import { HomeComponent } from './home/home.component';
 import { ProfileComponent } from './profile/profile.component';
+import { SearchComponent } from './search/search.component';
+import { RestaurantComponent } from './restaurant_profile/restaurant.component';
 
 
 var routes = [
@@ -22,6 +24,14 @@ var routes = [
   {
     path: 'profile',
     component: ProfileComponent
+  },
+  {
+    path: 'search',
+    component: SearchComponent
+  },
+  {
+    path: 'restaurant',
+    component: RestaurantComponent
   }
 //  {
 //    path: 'edit/:id',
@@ -39,10 +49,15 @@ var routes = [
     LoginComponent,
     HomeComponent,
     ProfileComponent,
+    SearchComponent,
+    RestaurantComponent
   ],
   exports: [
     LoginComponent,
-    ProfileComponent
+    HomeComponent,
+    ProfileComponent,
+    SearchComponent,
+    RestaurantComponent
   ],
   providers: [
 

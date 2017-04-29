@@ -2,7 +2,7 @@
 <div class="container-fluid well span6">
 	<div class="row-fluid">
         <div class="col-md-4 text-center">
-		        <img src="https://conferencecloud-assets.s3.amazonaws.com/default_avatar.png" height="150px" class="img-circle">
+		        <img src="http://www.data-source.com/wp-content/uploads/2014/09/icon-restaurant.png" height="150px" class="img-circle">
             <br>
             <button class="btn btn-danger" (click)="logout()">Logout</button>
         </div>
@@ -10,24 +10,29 @@
         <div class="col-md-8">
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon1"><i class="fa fa-user"></i></span>
-              <input type="text" class="form-control" placeholder="Username" aria-describedby="basic-addon1" [(ngModel)]="user.username">
+              <input type="text" class="form-control" placeholder="Name" aria-describedby="basic-addon1" [(ngModel)]="restaurant.name">
             </div>
             <br>
             <div class="input-group">
               <span class="input-group-addon" id="basic-addon1">@</span>
-              <input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon1" [(ngModel)]="user.email">
+              <input type="text" class="form-control" placeholder="Email" aria-describedby="basic-addon1" [(ngModel)]="restaurant.email">
             </div>
             <br>
+						<div class="input-group">
+              <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
+              <input type="text" class="form-control" placeholder="Address" aria-describedby="basic-addon1" [(ngModel)]="restaurant.address">
+            </div>
+						<br>
             <div class="row">
                 <div class="col-md-6">
                   <div class="input-group">
                     <span class="input-group-addon" id="basic-addon1"><i class="fa fa-map-marker"></i></span>
-                    <input type="text" class="form-control" placeholder="City" aria-describedby="basic-addon1" [(ngModel)]="user.city">
+                    <input type="text" class="form-control" placeholder="City" aria-describedby="basic-addon1" [(ngModel)]="restaurant.city">
                   </div>
                   <br>
                 </div>
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="State" aria-describedby="basic-addon1" [(ngModel)]="user.state_post_code">
+                  <input type="text" class="form-control" placeholder="State" aria-describedby="basic-addon1" [(ngModel)]="restaurant.state_post_code">
                 </div>
               </div>
             <button type="submit" class="btn btn-primary btn-block">Update!</button>

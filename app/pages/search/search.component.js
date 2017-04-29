@@ -13,7 +13,7 @@ const core_1 = require("@angular/core");
 const router_1 = require("@angular/router");
 const profile_service_1 = require("../profile/profile.service");
 const dish_model_1 = require("../models/dish_model");
-let HomeComponent = class HomeComponent {
+let SearchComponent = class SearchComponent {
     constructor(router, profileService) {
         this.router = router;
         this.profileService = profileService;
@@ -42,20 +42,16 @@ let HomeComponent = class HomeComponent {
         // the third argument is a function which runs on completion
         () => console.log('done loading dishes'));
     }
-    goTo() {
-        this.router.navigate(['/login']);
-        console.log("not working?");
-    }
 };
-HomeComponent = __decorate([
+SearchComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
-        selector: 'home',
-        templateUrl: 'home.component.html',
-        styleUrls: ['home.component.css'],
+        selector: 'search',
+        templateUrl: 'search.component.html',
+        styleUrls: ['search.component.css'],
         providers: [profile_service_1.ProfileService]
     }),
     __metadata("design:paramtypes", [router_1.Router, profile_service_1.ProfileService])
-], HomeComponent);
-exports.HomeComponent = HomeComponent;
-//# sourceMappingURL=home.component.js.map
+], SearchComponent);
+exports.SearchComponent = SearchComponent;
+//# sourceMappingURL=search.component.js.map

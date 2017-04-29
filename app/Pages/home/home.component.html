@@ -1,11 +1,45 @@
-<button routerLink="login" >
-    Login
-</button>
+<!-- Jumbotron Header -->
+        <header class="jumbotron hero-spacer" *ngIf="!user">
+            <h1>Food Friend!</h1>
+            <p>Your go to place to see the best menu items for restraunts in your area!</p>
+            <p><a class="btn btn-primary btn-large">Sign Up!</a>
+            </p>
+        </header>
 
-<h1>Food Friend</h1>
+        <hr>
 
-<br>
-<br>
-<h2>Top Dishes in the Area</h2>
+        <!-- Title -->
+        <div class="row">
+            <div class="col-lg-12">
+                <h3>Top 5 Dishes {{ username }}</h3>
+            </div>
+        </div>
+        <!-- /.row -->
 
-<!-- need to make ngFor divs for -->
+        <!-- Page Features -->
+        <div class="row">
+
+            <div class="col-md-12 hero-feature">
+              <div class="list-group">
+                <li class="list-group-item" *ngFor="let item of dishes">
+                    <h3 class="text-info">{{ item.Restaurant_name }} <span class="badge pull-right">{{ item.score }}</span></h3>
+                    <h4>{{ item.Dish_name }}</h4>
+                    <p>{{ item.description }}</p>
+                </li>
+              </div>
+            </div>
+
+
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; Food Friend 2017</p>
+                </div>
+            </div>
+        </footer>

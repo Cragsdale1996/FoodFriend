@@ -10,11 +10,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@angular/core");
+const router_1 = require("@angular/router");
 const profile_service_1 = require("./profile.service");
-const user_model_1 = require("./user_model");
-const dish_model_1 = require("./dish_model");
+const user_model_1 = require("../models/user_model");
+const dish_model_1 = require("../models/dish_model");
 let ProfileComponent = class ProfileComponent {
-    constructor(profileService) {
+    constructor(router, profileService) {
+        this.router = router;
         this.profileService = profileService;
         this.user = new user_model_1.UserModel();
         this.dishes = [];
@@ -22,11 +24,17 @@ let ProfileComponent = class ProfileComponent {
     ngOnInit() {
         this.getProfile();
     }
+    logout() {
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/']);
+    }
     getProfile() {
         this.profileService.getProfile().subscribe(
         // the first argument is a function which runs on success
         data => {
             this.user = data[0];
+            localStorage.setItem('currentUser', JSON.stringify(data[0]));
+            this.profileService.setUser(this.user);
             for (var i = 0; i < data['Dishes'].length; i++) {
                 var dish = new dish_model_1.Dish();
                 dish = data['Dishes'][i];
@@ -48,7 +56,7 @@ ProfileComponent = __decorate([
         styleUrls: ['profile.component.css'],
         providers: [profile_service_1.ProfileService]
     }),
-    __metadata("design:paramtypes", [profile_service_1.ProfileService])
+    __metadata("design:paramtypes", [router_1.Router, profile_service_1.ProfileService])
 ], ProfileComponent);
 exports.ProfileComponent = ProfileComponent;
 //# sourceMappingURL=profile.component.js.map

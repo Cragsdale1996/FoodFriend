@@ -9,13 +9,13 @@ import { Dish } from '../models/dish_model';
 
 @Component({
 	moduleId: module.id,
-  selector: 'home',
-  templateUrl: 'home.component.html',
-  styleUrls: [ 'home.component.css' ],
+  selector: 'search',
+  templateUrl: 'search.component.html',
+  styleUrls: [ 'search.component.css' ],
 	providers: [ProfileService]
 })
 
-export class HomeComponent {
+export class SearchComponent {
 	user: UserModel;
 	dishes = [];
 
@@ -50,10 +50,5 @@ export class HomeComponent {
 			// the third argument is a function which runs on completion
 			() => console.log('done loading dishes')
 		)
-	}
-
-	goTo(){
-		this.router.navigate(['/login']);
-		console.log("not working?");
 	}
 }
