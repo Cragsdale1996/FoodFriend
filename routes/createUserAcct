@@ -32,7 +32,7 @@ $app->post('/createUserAcct', function ($request, $response) {
             $data[] = array('valid' => 'false', 'session_id' => 0 );
             $json = json_encode($data);
             $this->response->getBody()->write($json);
-            return $this->resonse;
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
           }
           else
           {
@@ -55,7 +55,7 @@ $app->post('/createUserAcct', function ($request, $response) {
                  $stm2 = $this->db->prepare($sql);
                  $stm2->execute();  
                  $this->response->getBody()->write($json);
-                 return $this->resonse;
+                 return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                }
          }
        });
