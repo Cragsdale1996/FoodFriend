@@ -19,7 +19,9 @@ $app->get('/userprofile/[{session_id}]', function($request, $response, $args){
                 $session_expire->bindParam("session_id", $args['session_id']);
                 $session_expire->execute();
                 $data[] = array('valid' => 'false', 'session_id' => 0);
-                return json_encode($data);
+                $json = json_encode($data);
+                $this->response->getBody()->write($json);
+                return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
         //if session exists and not expires
         } else {
@@ -44,13 +46,17 @@ $app->get('/userprofile/[{session_id}]', function($request, $response, $args){
 
             //combine both together
             $total = array_merge($data, $dish);
-
-            return $this->response->withJson($total);
+            $this->response->getBody()->write($total);
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
+            
         }
 
       //session_id no longer exist
       } else {
             $data[] = array('valid' => 'false', 'session_id' => 0);
-            return json_encode($data);
+            $datan = json_encode($data);
+            $this->response->getBody()->write($datan);
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
+            
       }
 });
