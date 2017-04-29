@@ -23,7 +23,9 @@ $app->delete('/userprofile/del/[{dish_id}]', function($request, $response, $args
                 $session_expire->bindParam("id", $id);
                 $session_expire->execute();
                 $mess[] = array('valid' => 'false', 'session_id' => 0);
-                return json_encode($mess);
+                $mssg = json_encode($mess);
+                $this->response->getBody()->write($mssg);
+                return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*')
 
         //if session exists and not expires
         } else {
@@ -37,18 +39,25 @@ $app->delete('/userprofile/del/[{dish_id}]', function($request, $response, $args
                //if can delete dish
                if($deleteDish->rowCount() != 0){
                    $mess[] = array('success' => 'true', 'session_id' => $id);
-                   return $this->response->withJson($mess);
+                   $mssg = json_encode($mess);
+                   $this->response->getBody()->write($mssg);
+                   return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
                //if dish id not exist, cannot delete
                } else {
                    $mess[] = array('success' => 'false', 'session_id' => $id);
-                   return $this->response->withJson($mess);
+                   $mesg = json_encode($mess);
+                   $this->response->getBody()->write($mesg);
+                   return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
+  
                }
         }
 
       //session_id no longer exist
       } else {
             $data[] = array('valid' => 'false', 'session_id' => 0);
-            return json_encode($data);
+            $datas = json_encode($data);
+            $this->response->getBody()->write($datas);
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
       }
 });
