@@ -23,21 +23,22 @@ $app->post('/createRestAccount', function($request, $response){
                 if($key == "state_post_code"){
                         $state_post_code = $param;
                 }
-	}
-	$passwords = password_hash($password, PASSWORD_DEFAULT);
+        }
+        $passwords = password_hash($password, PASSWORD_DEFAULT);
         $sth = $this->db->prepare("SELECT * FROM RestAccount");
         $sth->execute();
         $output = $sth->fetchAll();
         foreach ($output as $o){
                 if($o['name'] == $name OR $o['email'] == $email){
                         $data = json_decode($json, true);
-                        $data[] = array('valid' => 'false', 'session_id' => 0);
+ $data[] = array('valid' => 'false', 'session_id' => 0);
                         $json = json_encode($data);
-                        return $json;
+                        $this->response->getBody()->write($json);
+                        return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                 }
         }
-	$name = str_replace("'", "", $name);
-        $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$passwords', '$address', '$category', '$city','$state_post_code')";
+        $name = str_replace("'", "", $name);
+        $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$passwords', '$address', '$category', '$city', '$state_post_code$
         $stm = $this->db->prepare($sql);
         if($stm->execute()){
                 $stm = $this->db->prepare("SELECT rest_id FROM RestAccount WHERE name=:name");
@@ -50,9 +51,9 @@ $app->post('/createRestAccount', function($request, $response){
                 $data[] = array('valid' => 'true', 'session_id' => $sid);
                 $json = json_encode($data);
                 $sql = "INSERT INTO Sessions (account_id, is_restaurant, session_id, time_created, time_expires) VALUES ($val, 1, '$sid', now(), now() + interval 1 hour)";
-		$stm2 = $this->db->prepare($sql);
+                $stm2 = $this->db->prepare($sql);
                 $stm2->execute();
-                return $json;
+                $this->response->getBody()->write($json);
+                return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
         }
-
 });
