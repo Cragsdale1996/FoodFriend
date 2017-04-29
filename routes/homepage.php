@@ -10,13 +10,5 @@ $app->get('/home', function ($request, $response, $args) {
 
       $sth->execute();
       $list = $sth->fetchAll();
-      return $this->response->withJson($list);
-});
-
-$app->get('/[{name}]', function ($request, $response, $args) {
-    // Sample log message
-    $this->logger->info("Slim-Skeleton '/' route");
-
-    // Render index view
-    return $this->renderer->render($response, 'index.phtml', $args);
+      return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');withJson($list);
 });
