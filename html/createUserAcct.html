@@ -20,7 +20,7 @@ function prepareInfo(){
         }
 }
 
-function sendJson(n,c,e,s,p){
+function sendJson(n,e,cs,p){
 
         url = "http://localhost:8080/slim/public/index.php/createUserAcct";
         dataToSend = {"name": n,"email" : e,"city":c,"state" : s, "password" : p};
