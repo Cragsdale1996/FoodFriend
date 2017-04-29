@@ -31,7 +31,8 @@ $app->post('/createUserAcct', function ($request, $response) {
             $data = json_decode($json, true);
             $data[] = array('valid' => 'false', 'session_id' => 0 );
             $json = json_encode($data);
-            return $json;
+            $this->response->getBody()->write($json);
+            return $this->resonse;
           }
           else
           {
@@ -52,8 +53,9 @@ $app->post('/createUserAcct', function ($request, $response) {
                  $json = json_encode($data);
                  $sql = "INSERT INTO Sessions(account_id, is_restaurant, session_id, time_created, time_expires) VALUES ('$val', 0, '$sid', NOW(), NOW() + INTERVAL 1 HOUR)";
                  $stm2 = $this->db->prepare($sql);
-                 $stm2->execute();              
-                 return $json;
+                 $stm2->execute();  
+                 $this->response->getBody()->write($json);
+                 return $this->resonse;
                }
          }
        });
