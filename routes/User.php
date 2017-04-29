@@ -56,7 +56,7 @@ $app->post('/userprofile', function ($request, $response){
         return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 });
 
-$app->post('/createUserAcct', function ($request, $response) {
+$app->post('/createUserAccount', function ($request, $response) {
         $allPostVariables = $request->getBody();
           $input = json_decode($allPostVariables, true);
           foreach($input as $key => $param)
@@ -64,7 +64,7 @@ $app->post('/createUserAcct', function ($request, $response) {
             $name = $input['name'];
             $email = $input['email'];
             $city= $input['city'];
-            $state = $input['state'];
+            $state = $input['state_post_code'];
             $password = $input['password'];
           }
 
