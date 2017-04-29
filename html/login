@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+
+<script>
+function prepareInfo(){
+        var e = document.getElementById('email').value;
+        var p = document.getElementById('password').value;
+        sendJson(e, p);
+}
+
+function sendJson(e, p){
+
+        url = "http://ec2-52-10-135-114.us-west-2.compute.amazonaws.com/foodfriend/public/login";
+        dataToSend = {"email" : e, "password" : p};
+        console.log(dataToSend);
+        $.ajax({
+                type: 'POST',
+                url: url,
+                dataType: 'json',
+                data: JSON.stringify(dataToSend),
+                contentType: 'application/json',
+                success: function(data){
+                        alert(JSON.stringify(data));
+                },
+                error: function(jqXHR, exception) {
+                        if (jqXHR.status === 0) {
+                                alert('Unable to connect.\n Verify Network.');
+                        } else if (jqXHR.status == 404) {
+                                alert('Requested URL  not found. [404]');
+                        } else if (jqXHR.status == 500) {
+                                alert('Internal Server Error [500].');
+                        } else if (exception === 'parsererror') {
+                                alert('Data from Server was not JSON :( Parse failed.');
+                        } else if (exception === 'timeout') {
+                                alert('Time out error.');
+                        } else if (exception === 'abort') {
+                                alert('Ajax request aborted.');
+                        } else {
+                                alert('Uncaught Error.\n' + jqXHR.responseText);
+                        }
+                }
+
+});
+}
+</script>
+</head>
+<body>
+<h1> Login Page </h1>
+  email    : <input type="text" name="email" id="email"/><br>
+  password : <input type="password" name="password" id="password"/><br>
+ <input type="button" value="login" onclick= "prepareInfo()"/>
+
+
+</body>
+</html>
+
+
