@@ -26,7 +26,7 @@ $app->post('/login', function ($request, $response) {
                         $this->response->getBody()->write($json);
                         return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                 }else{
-                        $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id");
+                        $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id AND is_restaurant = 1");
                         $check->bindParam("account_id", $output2[0][rest_id]);
                         $check->execute();
                         $output3 = $check->fetchAll();
@@ -46,7 +46,7 @@ $app->post('/login', function ($request, $response) {
                                         $data = json_decode($json, true);
                                         $data[] = array('valid' => 'false', 'session_id' => '0');
                                         $json = json_encode($data);
-                                                                                $this->response->getBody()->write($json);
+                                        $this->response->getBody()->write($json);
                                         return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                                 }
                         }else{
@@ -59,7 +59,7 @@ $app->post('/login', function ($request, $response) {
                                         $this->response->getBody()->write($json);
                                         return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                                 }else{
-                                        $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
+                                        $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id AND is_restaurant = 1");
                                         $stm2->bindParam("account_id", $output3[0][account_id]);
                                         $stm2->execute();
                                         $data = json_decode($json, true);
@@ -72,7 +72,7 @@ $app->post('/login', function ($request, $response) {
                         }
                 }
         }else{
-                $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id");
+                $check = $this->db->prepare("SELECT session_id, time_expires FROM Sessions WHERE account_id=:account_id AND is_restaurant = 0");
                 $check->bindParam("account_id", $output[0][user_id]);
                 $check->execute();
                 $output3 = $check->fetchAll();
@@ -105,7 +105,7 @@ $app->post('/login', function ($request, $response) {
                                 $this->response->getBody()->write($json);
                                 return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
                         }else{
-                                $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id");
+                                $stm2 = $this->db->prepare("DELETE FROM Sessions WHERE account_id=:account_id AND is_restaurant = 0");
                                 $stm2->bindParam("account_id", $output3[0][account_id]);
                                 $stm2->execute();
                                 $data = json_decode($json, true);
