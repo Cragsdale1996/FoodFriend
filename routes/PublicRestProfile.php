@@ -21,8 +21,7 @@ $app->get('/restprofile/[{rest_id}]', function($request, $response, $args){
     //combine both together
     $total = array_merge($data, $dish);
 
-    return $this->response->withJson($total);
-
+    return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*')->withJson($total);
 });
 
 //up vote (down vote) a dish or add a dish to favorite list
@@ -50,12 +49,16 @@ $app->post('/restProfile/public', function($request, $response, $args){
             $session_expire->bindParam("id", $id);
             $session_expire->execute();
             $mess[] = array('valid' => 'false', 'session_id' => 0);
-            return json_encode($mess);
+            
+            $this->response->getBody()->write(json_encode($mess));
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
         //if session exists and not expires, but isRestaurant (can't vote or add favorite dish)
         } else if ($data[0][is_restaurant] == 1) {
             $mess[] = array('valid' => 'false', 'session_id' => $id);
-            return json_encode($mess);
+            
+            $this->response->getBody()->write(json_encode($mess));
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
         //if session exists and not expires and not restaurant account
         } else {
@@ -76,7 +79,9 @@ $app->post('/restProfile/public', function($request, $response, $args){
     //session_id no longer exist
     } else {
         $data[] = array('valid' => 'false', 'session_id' => 0);
-        return json_encode($data);
+        
+        $this->response->getBody()->write(json_encode($data));
+        return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
     }
 
 });
@@ -91,14 +96,18 @@ function addDish($db, $dish_id, $user_id, $id){
         //if dish is already in favorite list for this user
         if(!empty($data)){
             $mess[] = array('success' => 'false', 'session_id' => $id);
-            return json_encode($mess);
+            
+            $this->response->getBody()->write(json_encode($mess));
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
             //dish not exist , CREATE new favorite
         } else {
             $new = $db->prepare("INSERT INTO Favorites(user_id, dish_id) VALUES('$user_id','$dish_id')");
             $new->execute();
             $mess[] = array('success' => 'true', 'session_id' => $id);
-            return json_encode($mess);
+            
+            $this->response->getBody()->write(json_encode($mess));
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
         }
     }
 }
@@ -125,12 +134,18 @@ function updateVote($db, $dish_id, $user_id, $id, $vote){
               $q2->execute();
 
               $mess[] = array('success' => 'true', 'session_id' => $id);
-              return json_encode($mess);
+              
+              
+              $this->response->getBody()->write(json_encode($mess));
+              return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
 
           //if your vote is the same
           } else {
               $mess[] = array('success' => 'false', 'session_id' => $id);
-              return json_encode($mess);
+              
+              
+              $this->response->getBody()->write(json_encode($mess));
+              return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
           }
 
       //vote not exist for this user , CREATE new vote data
@@ -142,6 +157,9 @@ function updateVote($db, $dish_id, $user_id, $id, $vote){
           $q2->execute();
 
           $mess[] = array('success' => 'true', 'session_id' => $id);
-          return json_encode($mess);
+          
+          
+          $this->response->getBody()->write(json_encode($mess));
+          return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
       }
 }
