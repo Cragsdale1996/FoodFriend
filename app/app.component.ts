@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { UserModel } from './pages/models/user_model';
-import { ProfileService } from './pages/profile/profile.service';
+import { UserModel } from './links/models/user_model';
+import { ProfileService } from './links/profile/profile.service';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 
 
@@ -30,6 +30,6 @@ export class AppComponent {
     }
   }
 
-  
+
 
 }
