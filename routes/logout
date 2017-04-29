@@ -15,13 +15,17 @@ $info = $this->db->prepare("SELECT account_id, session_id, time_expires FROM Ses
                 $session_expire->bindParam("id", $id);
                 $session_expire->execute();
                 $mess[] = array('valid' => 'true', 'session_id' => 0);
-                return json_encode($mess);
+                
+                $this->response->getBody()->write(json_encode($mess));
+                return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
       
       } 
       else {
         //if session id does not exist, nothing to delete
             $data[] = array('valid' => 'false', 'session_id' => 0);
-            return json_encode($data);
+            
+            $this->response->getBody()->write(json_encode($data));
+            return $this->response->withAddedHeader('Access-Control-Allow-Origin', '*');
       }
 });
 ?>
