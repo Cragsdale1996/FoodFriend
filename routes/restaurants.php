@@ -175,7 +175,7 @@ $app->post('/createRestAccount', function($request, $response){
                 }
         }
         $name = str_replace("'", "", $name);
-        $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$passwords', '$address', '$category', '$city', '$state_post_code$
+        $sql = "INSERT INTO RestAccount (name, email, password, address, category, city, state_post_code) VALUES ('$name','$email','$passwords', '$address', '$category', '$city', '$state_post_code')";
         $stm = $this->db->prepare($sql);
         if($stm->execute()){
                 $stm = $this->db->prepare("SELECT rest_id FROM RestAccount WHERE name=:name");
