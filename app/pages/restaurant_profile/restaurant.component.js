@@ -18,30 +18,82 @@ let RestaurantComponent = class RestaurantComponent {
     constructor(router, profileService) {
         this.router = router;
         this.profileService = profileService;
+        this.session = "";
+        this.isRest = "";
         this.restaurant = new restaurant_model_1.RestaurantModel();
         this.dishes = [];
     }
     ngOnInit() {
+        this.session = localStorage.getItem('currentUser');
+        this.isRest = localStorage.getItem('isRest');
         this.getRestaurantProfile();
     }
-    logout() {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/']);
+    favorite(dish_id) {
+        console.log("Dish ID", dish_id);
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            alert("This dish has been added to your favorites");
+            this.getRestaurantProfile();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be added to favorites at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
+    }
+    upvote(dish_id) {
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "1", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            this.getRestaurantProfile();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be upvoted at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
+    }
+    downvote(dish_id) {
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "-1", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            this.getRestaurantProfile();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be downvoted at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
     }
     getRestaurantProfile() {
-        this.profileService.getRestaurantProfile().subscribe(
+        var rest_id = localStorage.getItem('restId');
+        this.profileService.viewRestaurant(rest_id).subscribe(
         // the first argument is a function which runs on success
         data => {
             this.restaurant = data[0];
-            localStorage.setItem('currentUser', JSON.stringify(data[0]));
-            this.profileService.setRestaurant(this.restaurant);
             for (var i = 0; i < data['Dishes'].length; i++) {
                 var dish = new dish_model_1.Dish();
                 dish = data['Dishes'][i];
                 this.dishes.push(dish);
             }
             console.log(this.restaurant);
-            console.log(this.dishes);
+            console.log(data);
         }, 
         // the second argument is a function which runs on error
         err => console.error(err), 

@@ -1,15 +1,69 @@
-<form>
-  <div>
-    <label class="center-block">Email
-      <input type="text" class="form-control" id="name" name="name">
-    </label>
-    <label class="center-block">Password:
-      <input type="text" class="form-control" id="year" name="year">
-    </label>
-    <button>Login</button>
-    <label class="center-block">Confirm Password:
-      <input type="text" class="form-control" id="imgpath" name="imgpath">
-    </label>
+<div class="row">
+  <div class="col-md-12">
+    <h1 class="text-center">Login or Sign Up</h1>
   </div>
-</form>
-<button>Create Account</button>
+</div>
+<br><br>
+<div class="row">
+  <div class="col-md-offset-3 col-md-6">
+    <select class="form-control" [(ngModel)]="user" [ngModelOptions]="{standalone: true}">
+      <option [ngValue]="true">User</option>
+      <option [ngValue]="false">Restaurant</option>
+    </select>
+    <br>
+    <label class="center-block">Email
+      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="email">
+    </label>
+    <br>
+    <label class="center-block">Password:
+      <input type="text" class="form-control" id="password" name="password" [(ngModel)]="password">
+    </label>
+    <br>
+    <button class="btn btn-primary btn-block" (click)="login()">Login</button>
+  </div>
+</div>
+<br>
+<div class="row" *ngIf="user">
+  <div class="col-md-offset-3 col-md-6">
+    <label class="center-block">Name:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="name">
+    </label>
+    <br>
+    <label class="center-block">City:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="city">
+    </label>
+    <br>
+    <label class="center-block">State:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="state">
+    </label>
+    <br>
+    <button class="btn btn-success btn-block" (click)="createUser()">Create User Account</button>
+  </div>
+</div>
+
+<div class="row" *ngIf="!user">
+  <div class="col-md-offset-3 col-md-6">
+    <label class="center-block">Name:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="name">
+    </label>
+    <br>
+    <label class="center-block">Category:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="category">
+    </label>
+    <br>
+    <label class="center-block">Address:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="address">
+    </label>
+    <br>
+    <label class="center-block">City:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="city">
+    </label>
+    <br>
+    <label class="center-block">State:
+      <input type="text" class="form-control" id="Name" name="name" [(ngModel)]="state">
+    </label>
+    <br>
+    <button class="btn btn-success btn-block" (click)="createRestaurant()">Create Restaurant Account</button>
+  </div>
+</div>
+<br><br><br><br><br>

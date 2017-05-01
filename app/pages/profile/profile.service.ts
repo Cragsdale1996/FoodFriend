@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
+import {Http, Response, Headers, RequestOptions, RequestMethod} from "@angular/http";
 import {Observable} from 'rxjs/Rx';
+import 'rxjs/add/operator/map'
 import { UserModel } from '../models/user_model';
 import { RestaurantModel } from '../models/restaurant_model';
 
@@ -12,73 +13,198 @@ export class ProfileService {
 
     private user: UserModel;
     private restaurant: RestaurantModel;
+    public http: Http;
 
-    constructor(private http:Http) {
+    constructor(http:Http) {
+      this.http = http;
       this.user = new UserModel();
     }
 
-    setUser(user) {
-      this.user = user;
-    }
-
-    setRestaurant(user) {
-      this.restaurant = user;
-    }
-
-    getRestaurant() {
-      return this.restaurant;
-    }
-
-    getUser() {
-      return this.user;
-    }
-
-
-
     // Uses http.get() to load a single JSON file
-    getProfile() {
-        this.getProfileUrl = this.getProfileUrl + "123"
-        return this.http.get(this.getProfileUrl).map((res:Response) => res.json());
+    getProfile(sessionId) {
+        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/userprofile/" + sessionId;
+        return this.http.get(url).map((res:Response) => res.json());
     }
 
-    getRestaurantProfile() {
-        var url = "https://private-0c3f4-apiary13.apiary-mock.com/restaurant/" + "123"
+    getRestaurantProfile(sessionId) {
+        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurant/" + sessionId;
         return this.http.get(url).map((res:Response) => res.json());
     }
 
     getTop5Dishes() {
-        var url = "https://private-0c3f4-apiary13.apiary-mock.com/home"
+        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/home"
         return this.http.get(url).map((res:Response) => res.json());
     }
 
-    // Uses Observable.forkJoin() to run multiple concurrent http.get() requests.
-    // The entire operation will result in an error state if any single request fails.
-    getBooksAndMovies() {
-        return Observable.forkJoin(
-        this.http.get('/app/books.json').map((res:Response) => res.json()),
-        this.http.get('/app/movies.json').map((res:Response) => res.json())
-        );
+    createUser(newUser, password) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/createUserAccount";
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "email": newUser.email,
+        "password": password,
+        "name": newUser.username,
+        "city": newUser.city,
+        "state": newUser.state_post_code
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res.json());
     }
 
-    createFood(food) {
-        let headers = new Headers({'Content-Type': 'application/json'});
+    createRestaurant(restaurant, password) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/createRestAccount";
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+
+      let body = JSON.stringify({
+        "email": restaurant.email,
+        "password": password,
+        "name": restaurant.name,
+        "city": restaurant.city,
+        "state_post_code": restaurant.state_post_code,
+        "category": restaurant.category,
+        "address": restaurant.address
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res.json());
+    }
+
+    login(email, password) {
+        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/login"
+        let headers = new Headers({'Content-Type': 'application/json', 'accept': 'application/json'});
         let options = new RequestOptions({headers: headers});
-        let body = JSON.stringify(food);
+        let body = JSON.stringify({
+          "email": email,
+          "password": password
+        });
         // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
-        return this.http.post('/api/food/', body, headers).map((res:Response) => res.json());
+        return this.http.post(url, body, headers).map((res:Response) => res.json());
     }
 
-    updateFood(food) {
-        let headers = new Headers({'Content-Type': 'application/json'});
-        let options = new RequestOptions({headers: headers});
-        let body = JSON.stringify(food);
-        // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
-        return this.http.put('/api/food/' + food.id, body, headers).map((res:Response) => res.json());
+    logout(sessionId) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/logout"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      // let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+      });
+
+      let options = new RequestOptions({
+        body: body,
+        method: RequestMethod.Delete
+      });
+
+      return this.http.request(url, options).map((res:Response) => res.json());
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      // return this.http.delete(url, body, headers).map((res:Response) => res.json());
     }
 
-    deleteFood(food) {
-        // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
-        return this.http.delete('/api/food/' + food.id);
+    search(term) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/searchpage/" + term;
+      return this.http.get(url).map((res:Response) => res.json());
+    }
+
+    addDish(sessionId, name, description) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurant/addDishes"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+        "dishes": [
+          {
+            "name": name,
+            "description": description
+          }
+        ]
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res);
+    }
+
+    deleteDish(sessionId, dishId) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurant/deleteDishes"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      // let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+        "dishes": [
+          {
+            "id": dishId
+          }
+        ]
+      });
+
+      let options = new RequestOptions({
+        body: body,
+        method: RequestMethod.Delete
+      });
+
+      return this.http.request(url, options).map((res:Response) => res.json());
+    }
+
+    vote(sessionId, vote, dishId) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restProfile/public"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+        "vote": vote,
+        "dish_id": dishId
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res.json());
+    }
+
+    unFavorite(sessionId, dishId) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/userprofile/del/" + dishId;
+      let headers = new Headers({'Content-Type': 'application/json'});
+      // let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+      });
+
+      let options = new RequestOptions({
+        body: body,
+        method: RequestMethod.Delete
+      });
+
+      return this.http.request(url, options).map((res:Response) => res.json());
+    }
+
+    viewRestaurant(restId) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restprofile/" + restId;
+      return this.http.get(url).map((res:Response) => res.json());
+    }
+
+    updateUserProfile(sessionId, user) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/userprofile"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+        "email": user.email,
+        "name": user.username,
+        "city": user.city,
+        "state_post_code": user.state_post_code
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res.json());
+    }
+
+    updateRestaurantProfile(sessionId, restaurant) {
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurants"
+      let headers = new Headers({'Content-Type': 'application/json'});
+      let options = new RequestOptions({headers: headers});
+      let body = JSON.stringify({
+        "session_id": sessionId,
+        "address": restaurant.address,
+        "category": restaurant.category,
+        "name": restaurant.name,
+        "city": restaurant.city,
+        "state_post_code": restaurant.state_post_code
+      });
+      // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
+      return this.http.post(url, body, headers).map((res:Response) => res.json());
     }
 
 }

@@ -1,15 +1,15 @@
 <div class="row">
   <div class="col-md-12">
-    <h1> Search Dishes </h1>
+    <h1> Search Restaurants </h1>
   </div>
 </div>
 
 <div class="row">
   <div class="col-md-12">
     <div class="input-group">
-      <input type="text" class="form-control" placeholder="Search for Dishes...">
+      <input type="text" class="form-control" placeholder="Search Here..." [(ngModel)]="term">
       <span class="input-group-btn">
-        <button class="btn btn-primary" type="button">Go!</button>
+        <button class="btn btn-primary" type="button" (click)="search(term)">Go!</button>
       </span>
     </div>
   </div>
@@ -20,10 +20,8 @@
 
     <div class="col-md-12 hero-feature">
       <div class="list-group">
-        <li class="list-group-item" *ngFor="let item of dishes">
-            <h3 class="text-info">{{ item.Restaurant_name }} <span class="badge pull-right">{{ item.score }}</span></h3>
-            <h4>{{ item.Dish_name }}</h4>
-            <p>{{ item.description }}</p>
+        <li class="list-group-item" *ngFor="let item of restaurants">
+            <h3 class="text-info"><small>{{ item.rest_id }}</small> {{ item.name }} <button class="btn btn-link pull-right" (click)="viewRestaurant(item.rest_id)"> View </button></h3>
         </li>
       </div>
     </div>

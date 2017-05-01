@@ -1,5 +1,5 @@
 <!-- Jumbotron Header -->
-        <header class="jumbotron hero-spacer" *ngIf="!user">
+        <header class="jumbotron hero-spacer" *ngIf="token == ''">
             <h1>Food Friend!</h1>
             <p>Your go to place to see the best menu items for restraunts in your area!</p>
             <p><a class="btn btn-primary btn-large">Sign Up!</a>
@@ -22,8 +22,8 @@
             <div class="col-md-12 hero-feature">
               <div class="list-group">
                 <li class="list-group-item" *ngFor="let item of dishes">
-                    <h3 class="text-info">{{ item.Restaurant_name }} <span class="badge pull-right">{{ item.score }}</span></h3>
-                    <h4>{{ item.Dish_name }}</h4>
+                    <h3 class="">{{ item.Dish_name }}<span class="badge pull-right">{{ item.score }}</span></h3>
+                    <h4>{{ item.Restaurant_name }}</h4>
                     <p>{{ item.description }}</p>
                 </li>
               </div>

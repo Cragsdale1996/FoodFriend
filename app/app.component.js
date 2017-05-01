@@ -20,11 +20,7 @@ let AppComponent = class AppComponent {
     }
     ;
     ngOnInit() {
-        var user = JSON.parse(localStorage.getItem('currentUser'));
-        this.profileService.setUser(user);
-        if (user) {
-            this.user = this.profileService.getUser();
-        }
+        // var user = JSON.parse(localStorage.getItem('currentUser'));
     }
 };
 AppComponent = __decorate([
