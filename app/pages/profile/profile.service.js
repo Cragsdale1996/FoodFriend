@@ -121,11 +121,7 @@ let ProfileService = class ProfileService {
                 }
             ]
         });
-        let options = new http_1.RequestOptions({
-            body: body,
-            method: http_1.RequestMethod.Delete
-        });
-        return this.http.request(url, options).map((res) => res.json());
+        return this.http.post(url, body, headers).map((res) => res);
     }
     vote(sessionId, vote, dishId) {
         var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restProfile/public";
@@ -146,11 +142,7 @@ let ProfileService = class ProfileService {
         let body = JSON.stringify({
             "session_id": sessionId,
         });
-        let options = new http_1.RequestOptions({
-            body: body,
-            method: http_1.RequestMethod.Delete
-        });
-        return this.http.request(url, options).map((res) => res.json());
+        return this.http.post(url, body, headers).map((res) => res);
     }
     viewRestaurant(restId) {
         var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restprofile/" + restId;
@@ -171,7 +163,7 @@ let ProfileService = class ProfileService {
         return this.http.post(url, body, headers).map((res) => res.json());
     }
     updateRestaurantProfile(sessionId, restaurant) {
-        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurants";
+        var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurant/updateInfo";
         let headers = new http_1.Headers({ 'Content-Type': 'application/json' });
         let options = new http_1.RequestOptions({ headers: headers });
         let body = JSON.stringify({
@@ -183,7 +175,7 @@ let ProfileService = class ProfileService {
             "state_post_code": restaurant.state_post_code
         });
         // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
-        return this.http.post(url, body, headers).map((res) => res.json());
+        return this.http.post(url, body, headers).map((res) => res);
     }
 };
 ProfileService = __decorate([

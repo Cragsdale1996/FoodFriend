@@ -134,12 +134,7 @@ export class ProfileService {
         ]
       });
 
-      let options = new RequestOptions({
-        body: body,
-        method: RequestMethod.Delete
-      });
-
-      return this.http.request(url, options).map((res:Response) => res.json());
+      return this.http.post(url, body, headers).map((res:Response) => res);
     }
 
     vote(sessionId, vote, dishId) {
@@ -163,12 +158,7 @@ export class ProfileService {
         "session_id": sessionId,
       });
 
-      let options = new RequestOptions({
-        body: body,
-        method: RequestMethod.Delete
-      });
-
-      return this.http.request(url, options).map((res:Response) => res.json());
+      return this.http.post(url, body, headers).map((res:Response) => res);
     }
 
     viewRestaurant(restId) {
@@ -192,7 +182,7 @@ export class ProfileService {
     }
 
     updateRestaurantProfile(sessionId, restaurant) {
-      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurants"
+      var url = "http://ec2-54-187-37-250.us-west-2.compute.amazonaws.com/foodfriend/public/index.php/restaurant/updateInfo"
       let headers = new Headers({'Content-Type': 'application/json'});
       let options = new RequestOptions({headers: headers});
       let body = JSON.stringify({
@@ -204,7 +194,7 @@ export class ProfileService {
         "state_post_code": restaurant.state_post_code
       });
       // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
-      return this.http.post(url, body, headers).map((res:Response) => res.json());
+      return this.http.post(url, body, headers).map((res:Response) => res);
     }
 
 }
