@@ -38,8 +38,19 @@ let ProfileComponent = class ProfileComponent {
         }
     }
     logout() {
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
+        var token = localStorage.getItem('currentUser');
+        this.profileService.logout(token).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log("Logged Out Data", data);
+            localStorage.removeItem('currentUser');
+            localStorage.removeItem('isRest');
+            this.router.navigate(['/login']);
+        }, 
+        // the second argument is a function which runs on error
+        err => console.error(err), 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
     }
     updateProfile() {
         var token = localStorage.getItem('currentUser');

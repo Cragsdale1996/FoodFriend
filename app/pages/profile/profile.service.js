@@ -81,11 +81,7 @@ let ProfileService = class ProfileService {
         let body = JSON.stringify({
             "session_id": sessionId,
         });
-        let options = new http_1.RequestOptions({
-            body: body,
-            method: http_1.RequestMethod.Delete
-        });
-        return this.http.request(url, options).map((res) => res.json());
+        return this.http.post(url, body, headers).map((res) => res.json());
         // Note: This is only an example. The following API call will fail because there is no actual API to talk to.
         // return this.http.delete(url, body, headers).map((res:Response) => res.json());
     }
