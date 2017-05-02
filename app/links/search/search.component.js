@@ -12,30 +12,34 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@angular/core");
 const router_1 = require("@angular/router");
 const profile_service_1 = require("../profile/profile.service");
-const dish_model_1 = require("../models/dish_model");
 let SearchComponent = class SearchComponent {
     constructor(router, profileService) {
         this.router = router;
         this.profileService = profileService;
-        this.dishes = [];
+        this.restaurants = [];
+        this.term = "";
     }
     ;
     ngOnInit() {
-        var user = JSON.parse(localStorage.getItem('currentUser'));
-        this.profileService.setUser(user);
-        if (user) {
-            this.user = this.profileService.getUser();
-        }
-        this.getDishes();
     }
-    getDishes() {
-        this.profileService.getTop5Dishes().subscribe(data => {
-            for (var i = 0; i < data.length; i++) {
-                var dish = new dish_model_1.Dish();
-                dish = data[i];
-                this.dishes.push(dish);
+    viewRestaurant(rest_id) {
+        localStorage.setItem('restId', rest_id);
+        this.router.navigate(['restaurant']);
+    }
+    search(term) {
+        this.profileService.search(term).subscribe(data => {
+            console.log(data);
+            this.restaurants = [];
+            if (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var restaurant = {
+                        "name": data[i].name,
+                        "rest_id": data[i].rest_id
+                    };
+                    this.restaurants.push(restaurant);
+                }
+                console.log(this.restaurants);
             }
-            console.log(this.dishes);
         }, 
         // the second argument is a function which runs on error
         err => console.error(err), 

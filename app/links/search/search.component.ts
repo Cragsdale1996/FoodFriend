@@ -17,7 +17,8 @@ import { Dish } from '../models/dish_model';
 
 export class SearchComponent {
 	user: UserModel;
-	dishes = [];
+	restaurants = [];
+  term = ""
 
 	constructor(private router : Router, public profileService: ProfileService){
 
@@ -25,30 +26,36 @@ export class SearchComponent {
 	};
 
 	ngOnInit() {
-		var user = JSON.parse(localStorage.getItem('currentUser'));
-		this.profileService.setUser(user as UserModel);
-		if (user) {
-			this.user = this.profileService.getUser();
-		}
 
-		this.getDishes()
 	}
 
-	getDishes() {
-		this.profileService.getTop5Dishes().subscribe(
-			data => {
-				for (var i = 0; i < data.length; i++) {
-					var dish = new Dish();
-					dish = data[i];
-					this.dishes.push(dish);
+  viewRestaurant(rest_id) {
+    localStorage.setItem('restId', rest_id)
+    this.router.navigate(['restaurant'])
+  }
+
+  search(term) {
+	 this.profileService.search(term).subscribe(
+		 data => {
+			 console.log(data);
+       this.restaurants = [];
+       if (data) {
+        for (var i = 0; i < data.length; i++) {
+					var restaurant = {
+            "name": data[i].name,
+            "rest_id":data[i].rest_id
+          }
+
+					this.restaurants.push(restaurant);
 				}
 
-				console.log(this.dishes);
-			},
-			// the second argument is a function which runs on error
-			err => console.error(err),
-			// the third argument is a function which runs on completion
-			() => console.log('done loading dishes')
-		)
-	}
+				console.log(this.restaurants);
+       }
+		 },
+		 // the second argument is a function which runs on error
+		 err => console.error(err),
+		 // the third argument is a function which runs on completion
+		 () => console.log('done loading dishes')
+	 )
+ 	}
 }

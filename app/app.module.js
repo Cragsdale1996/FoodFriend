@@ -10,7 +10,7 @@ const core_1 = require("@angular/core");
 const platform_browser_1 = require("@angular/platform-browser");
 const router_1 = require("@angular/router");
 const app_component_1 = require("./app.component");
-const pages_module_1 = require("./pages/pages.module");
+const pages_module_1 = require("./links/pages.module");
 const http_1 = require("@angular/http");
 let AppModule = class AppModule {
 };

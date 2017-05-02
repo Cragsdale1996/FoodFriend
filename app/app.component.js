@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@angular/core");
-const profile_service_1 = require("./pages/profile/profile.service");
+const profile_service_1 = require("./links/profile/profile.service");
 const router_1 = require("@angular/router");
 let AppComponent = class AppComponent {
     constructor(router, profileService) {
@@ -20,11 +20,7 @@ let AppComponent = class AppComponent {
     }
     ;
     ngOnInit() {
-        var user = JSON.parse(localStorage.getItem('currentUser'));
-        this.profileService.setUser(user);
-        if (user) {
-            this.user = this.profileService.getUser();
-        }
+        // var user = JSON.parse(localStorage.getItem('currentUser'));
     }
 };
 AppComponent = __decorate([

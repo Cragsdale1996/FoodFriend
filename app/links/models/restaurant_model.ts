@@ -5,4 +5,5 @@ export class RestaurantModel {
     address: string;
     city: string;
     state_post_code: string;
+    num_dishes: string;
 }

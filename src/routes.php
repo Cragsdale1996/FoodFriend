@@ -3,23 +3,23 @@
 
 // Login Page
 
-include 'pageFiles/login.php';
+include 'pageFiles/loginLogout.php';
 
 // Home Page
 
-include 'pageFiles/home.php';
+include 'pageFiles/homepage.php';
 
 // Restaurant Page
 
-include 'pageFiles/restaurant.php';
+include 'pageFiles/restaurants.php';
 
 // Profile Page
 
-include 'pageFiles/profile.php';
+include 'pageFiles/user.php';
 
 // Search Page
 
-include 'pageFiles/search.php';
+include 'pageFiles/searchpage.php';
 
 // Leftovers
 

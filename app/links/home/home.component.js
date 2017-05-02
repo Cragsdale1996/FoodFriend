@@ -18,14 +18,12 @@ let HomeComponent = class HomeComponent {
         this.router = router;
         this.profileService = profileService;
         this.dishes = [];
+        this.token = "";
     }
     ;
     ngOnInit() {
-        var user = JSON.parse(localStorage.getItem('currentUser'));
-        this.profileService.setUser(user);
-        if (user) {
-            this.user = this.profileService.getUser();
-        }
+        this.token = localStorage.getItem('currentUser');
+        var isRest = localStorage.getItem('isRest');
         this.getDishes();
     }
     getDishes() {
@@ -35,16 +33,65 @@ let HomeComponent = class HomeComponent {
                 dish = data[i];
                 this.dishes.push(dish);
             }
-            console.log(this.dishes);
+            console.log(data);
         }, 
         // the second argument is a function which runs on error
         err => console.error(err), 
         // the third argument is a function which runs on completion
         () => console.log('done loading dishes'));
     }
-    goTo() {
-        this.router.navigate(['/login']);
-        console.log("not working?");
+    favorite(dish_id) {
+        console.log("Dish ID", dish_id);
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            alert("This dish has been added to your favorites");
+            this.getDishes();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be added to favorites at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
+    }
+    upvote(dish_id) {
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "1", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            this.getDishes();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be upvoted at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
+    }
+    downvote(dish_id) {
+        var token = localStorage.getItem('currentUser');
+        this.profileService.vote(token, "-1", dish_id).subscribe(
+        // the first argument is a function which runs on success
+        data => {
+            console.log(data);
+            this.dishes = [];
+            this.getDishes();
+        }, 
+        // the second argument is a function which runs on error
+        err => {
+            console.error(err);
+            alert("This dish could not be downvoted at this time");
+        }, 
+        // the third argument is a function which runs on completion
+        () => console.log('done loading profile'));
     }
 };
 HomeComponent = __decorate([
@@ -55,8 +102,7 @@ HomeComponent = __decorate([
         styleUrls: ['home.component.css'],
         providers: [profile_service_1.ProfileService]
     }),
-    __metadata("design:paramtypes", [router_1.Router, typeof (_a = typeof profile_service_1.ProfileService !== "undefined" && profile_service_1.ProfileService) === "function" && _a || Object])
+    __metadata("design:paramtypes", [router_1.Router, profile_service_1.ProfileService])
 ], HomeComponent);
 exports.HomeComponent = HomeComponent;
-var _a;
 //# sourceMappingURL=home.component.js.map
