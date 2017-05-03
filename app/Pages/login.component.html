@@ -1,0 +1,31 @@
+<!-- Bob Login modified from what I had to work with what Erik created -->
+<br>
+<br>
+<br>
+<form>
+  <div>
+    <label class="center-block">Email
+      <input type="text" class="form-control" id="email" name="email" [(ngModel)]="email">
+    </label>
+    <label class="center-block">Password:
+      <input type="text" class="form-control" id="password" name="password" [(ngModel)]="password">
+    </label>
+    <button (click)="login()">Login</button>
+    <label class="center-block">Name:
+      <input type="text" class="form-control" id="name" name="name" [(ngModel)]="name">
+    </label>
+    <label class="center-block">City:
+      <input type="text" class="form-control" id="city" name="city" [(ngModel)]="city">
+    </label>
+    <label class="center-block">State:
+      <input type="text" class="form-control" id="state" name="state" [(ngModel)]="state">
+    </label>
+    <label class="center-block">Confirm Password:
+      <input type="text" class="form-control" id="confimPassword" name="confirmPassword" [(ngModel)]="confirmPassword">
+    </label>
+    <input type="checkbox" class="form-control" id="restaurant" name="restaurant" [(ngModel)]="restaurant"> Restaurant
+  </div>
+</form>
+
+<button *ngIf="!restaurant" (click)="createUser()">Create User</button>
+<button *ngIf="restaurant" (click)="createRestaurant()">Create Restaurant</button>
