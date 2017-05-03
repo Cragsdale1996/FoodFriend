@@ -1,0 +1,23 @@
+<!-- File modified from what I had so that it works with the files Erik made -->
+<header>
+            <h1>Food Friend!</h1>
+            <p>Your go to place to see the best menu items for restraunts in your area!</p>
+</header>
+
+<br>
+<h2>Top 5 Dishes!</h2>
+
+<div>
+  <div class="list">
+    <li class="list-item" *ngFor="let dish of dishes">
+        <h3 class="text-info">{{ dish.Dish_name }} <span class="badge pull-right">{{ dish.score }}</span></h3>
+        <h4>{{ dish.Restaurant_name }}</h4>
+        <p>{{ dish.description }}</p>
+        <span *ngIf="session && isRest == 'false'">
+							<button class="btn btn-primary" (click)="favorite(dish.dish_id)">Favorite</button>
+							<button class="btn btn-success" (click)="upvote(dish.dish_id)">Upvote</button>
+							<button class="btn btn-danger" (click)="downvote(dish.dish_id)">Downvote</button>
+				</span>
+    </li>
+  </div>
+</div>
