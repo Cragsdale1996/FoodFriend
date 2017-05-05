@@ -9,7 +9,7 @@ $app->get('/restprofile/[{rest_id}]', function($request, $response, $args){
     $info->execute();
     $data = $info->fetchAll();
     //get favorite Dishes
-    $sth = $this->db->prepare("SELECT name, description, score, dish_id FROM Dishes WHERE rest_id =:rest_id");
+    $sth = $this->db->prepare("SELECT name, description, score, dish_id FROM Dishes WHERE rest_id =:rest_id ORDER BY score DESC");
     $sth->bindParam("rest_id", $args['rest_id']);
     $sth->execute();
     $list = $sth->fetchAll();
@@ -225,7 +225,7 @@ $app->get('/restaurant/[{session_id}]', function($request, $response, $args)
                 $dishesQuery = $this->db->prepare("SELECT COUNT(rest_id) AS dishesNum FROM Dishes GROUP BY rest_id HAVING rest_id=" . $restInfo->rest_id);
                 $dishesQuery->execute();
                 $dishesNum = $dishesQuery->fetchObject()->dishesNum;
-                $dishesQuery = $this->db->prepare("SELECT dish_id, name, description, score FROM Dishes WHERE rest_id=" . $restInfo->rest_id);
+                $dishesQuery = $this->db->prepare("SELECT dish_id, name, description, score FROM Dishes WHERE rest_id=" . $restInfo->rest_id . " ORDER BY score DESC");
                 $dishesQuery->execute();
                 $dishes = $dishesQuery->fetchAll();
                 $i = 0;

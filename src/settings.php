@@ -20,8 +20,8 @@ return [
         "db" => [
             "host" => "localhost",
             "dbname" => "FoodFriend",
-            "user" => "root",
-            "pass" => "Spring1101"
+            "user" => "foodfriend",
+            "pass" => "dbproject"
         ],
 
     ],
